@@ -246,8 +246,10 @@ export function About() {
 
           {/* Animated Stats Grid */}
           <div className="grid grid-cols-2 gap-6">
-            {stats.map((stat, index) => (
-              <Card key={index} className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-500 group overflow-hidden">
+            {stats.map((stat, index) => {
+              // Add link only for "Projects Completed" card
+              const isProjectsCard = stat.label === "Projects Completed";
+              const cardContent = (
                 <CardContent className="p-6 text-center relative">
                   <div className={`absolute inset-0 bg-gradient-to-br ${stat.color} opacity-5 group-hover:opacity-10 transition-opacity duration-500`}></div>
                   <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${stat.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300 relative z-10`}>
@@ -259,8 +261,19 @@ export function About() {
                   <div className="text-sm font-medium text-gray-300 mb-1 relative z-10">{stat.label}</div>
                   <div className="text-xs text-gray-400 relative z-10">{stat.description}</div>
                 </CardContent>
-              </Card>
-            ))}
+              );
+              return isProjectsCard ? (
+                <a key={index} href="/projects" className="block">
+                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-500 group overflow-hidden cursor-pointer">
+                    {cardContent}
+                  </Card>
+                </a>
+              ) : (
+                <Card key={index} className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-500 group overflow-hidden">
+                  {cardContent}
+                </Card>
+              );
+            })}
           </div>
         </div>
 
@@ -339,7 +352,7 @@ export function About() {
                   <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-600 via-purple-600 to-pink-600 transform md:-translate-x-1/2"></div>
                   
                   <div className="space-y-8">
-                    {journey.map((item, index) => {
+                    {[...journey].reverse().map((item, index) => {
                       const TypeIcon = getTypeIcon(item.type)
                       return (
                         <div key={index} className={`flex items-center ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-row`}>
